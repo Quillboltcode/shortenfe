@@ -1,0 +1,19 @@
+# Vite
+node_modules/
+dist/
+coverage/
+
+# React
+build/
+public/build/
+
+# IDEs and editors
+.vscode/
+.idea/
+.DS_Store
+
+# Other
+*.log
+*.tmp
+*.bak
+oldsrc/*

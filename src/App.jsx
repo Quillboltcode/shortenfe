@@ -13,7 +13,7 @@ const AppContent = () => {
   return (
     <>
       {/* Show Navbar on all pages except /login and /register */}
-      {location.pathname !== "/login" && location.pathname !== "/register" && <Navbar />}/
+      {location.pathname !== "/login" && location.pathname !== "/register" && <Navbar />}
 
       <Routes>
         {/* Allow access to Home page for both authenticated and unauthenticated users */}

@@ -1,22 +1,16 @@
 const API_URL = import.meta.env.VITE_API_URL || "";
 
-// Helper to handle response
+// Helper to handle response (strict JSON parsing)
 const handleResponse = async (response) => {
   if (!response.ok) {
-    // Parse the error message from the response body, or fallback to status code
-    const error = await response.text().catch(() => null); // Use text() instead of json()
-    throw new Error(error || `Error: ${response.status}`);
+    // Parse the error message from the response body as JSON
+    const error = await response.json().catch(() => null);
+    throw new Error(error?.message || `Error: ${response.status}`);
   }
 
-  // Check if the response is JSON or plain text
-  const contentType = response.headers.get("content-type");
-  if (contentType && contentType.includes("application/json")) {
-    return response.json(); // Parse JSON response
-  } else {
-    return response.text(); // Return plain text response
-  }
-};
-
+  // Always parse the response as JSON
+  return response.json();
+}
 
 // Add auth header to requests if token exists
 const authHeader = () => {
@@ -27,7 +21,20 @@ const authHeader = () => {
 // API client
 export const api = {
   // Health check
-  checkHealth: () => fetch(`${API_URL}/health`).then(handleResponse),
+  checkHealth: () =>
+    fetch(`${API_URL}/health`, {
+      method: "GET", // Explicitly specify the GET method
+    })
+      .then((response) => {
+        if (!response.ok) {
+          // If the response is not OK, parse the error message as plain text
+          return response.text().then((errorText) => {
+            throw new Error(errorText || `Error: ${response.status}`);
+          });
+        }
+        // Parse the response as plain text
+        return response.text();
+      }),
 
   // URL shortening
   shortenUrl: (data) => 

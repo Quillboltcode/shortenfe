@@ -61,7 +61,8 @@ export default function Home() {
       const response = await api.shortenUrl(requestData);
       console.log(response);
       // Update state with the shortened URL
-      const newShortUrl = response.shortened_url; // Assuming the backend returns this field
+      const newShortUrl = response.data.short_url; // Assuming the backend returns this field
+      console.log(newShortUrl)
       setShortUrl(newShortUrl);
 
       // Add the shortened URL to the history
